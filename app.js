@@ -14,9 +14,14 @@ app.use((err, req, res, next) => {
     return res.status(400).send(err.detail);
   }
 
-  if (err.code === "25P02") {
+  if (err.code === "23505") {
     return res.status(400).send(err.detail);
   }
+
+  if (err.code === "23503") {
+    return res.status(400).send(err.detail);
+  }
+  next(err);
 });
 
 app.use((err, req, res, next) => {

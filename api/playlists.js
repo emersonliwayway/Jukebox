@@ -7,11 +7,8 @@ import {
   getPlaylist,
   getPlaylists,
 } from "#db/queries/playlists";
-
-import {
-  addTracktoPlaylist,
-  getPlaylistTracks,
-} from "#db/queries/playlists_tracks";
+import { getTracksByPlaylist } from "#db/queries/tracks";
+import { addTracktoPlaylist } from "#db/queries/playlists_tracks";
 
 router
   .route("/")
@@ -48,23 +45,18 @@ router.route("/:id").get((req, res) => {
 router
   .route("/:id/tracks")
   .get(async (req, res) => {
-    const playlistTracks = await getPlaylistTracks(req.playlist.id);
-    if (!playlistTracks) {
-      return res.status(400).send("This playlist is currently empty.");
-    }
-    req.send(playlistTracks);
+    const playlistTracks = await getTracksByPlaylist(req.playlist.id);
+    res.send(playlistTracks);
   })
   .post(async (req, res) => {
     if (!req.body) {
       return res.status(400).send("Request body not provided.");
     }
-    const { playlistId, trackId } = req.body;
-    if (!playlistId || !trackId) {
-      return res
-        .status(400)
-        .send("Request body must include: playlist_id, track_id");
+    const { trackId } = req.body;
+    if (!trackId) {
+      return res.status(400).send("Request body must include: trackId");
     }
 
-    const playlistTrack = await addTracktoPlaylist(playlistId, trackId);
+    const playlistTrack = await addTracktoPlaylist(req.playlist.id, trackId);
     res.status(201).send(playlistTrack);
   });
