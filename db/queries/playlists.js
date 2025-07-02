@@ -18,7 +18,9 @@ export async function getPlaylists() {
   FROM playlists
   `;
 
-  const { rows: playlists } = db.query(sql);
+  const {
+    rows: [playlists],
+  } = db.query(sql);
   return playlists;
 }
 

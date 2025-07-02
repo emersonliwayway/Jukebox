@@ -48,7 +48,7 @@ router.route("/:id").get((req, res) => {
 router
   .route("/:id/tracks")
   .get(async (req, res) => {
-    const playlistTracks = await getPlaylistTracks(id);
+    const playlistTracks = await getPlaylistTracks(req.playlist.id);
     if (!playlistTracks) {
       return res.status(400).send("This playlist is currently empty.");
     }
